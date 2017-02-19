@@ -29,8 +29,8 @@
 
 	<!-- Scripts
 	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react-dom.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.0/react.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.0/react-dom.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.2/JSXTransformer.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
 	<script src="scripts/Griddle.js"></script>
@@ -524,6 +524,30 @@ var propertiesItem = [
   {
     "property": "onRowClick",
     "description": "A function that should be called when a row has been clicked. The 'gridRow' and event will be passed in as arguments.",
+    "type": "function",
+    "default": "null"
+  },
+  {
+    "property": "onRowMouseEnter",
+    "description": "A function that should be called when a mouse entered a row. The 'gridRow' and event will be passed in as arguments.",
+    "type": "function",
+    "default": "null"
+  },
+  {
+    "property": "onRowMouseLeave",
+    "description": "A function that should be called when a mouse left a row. The 'gridRow' and event will be passed in as arguments.",
+    "type": "function",
+    "default": "null"
+  },
+  {
+    "property": "onRowWillMount",
+    "description": "A function that should be called before a row was mounted. The 'gridRow' will be passed in as argument.",
+    "type": "function",
+    "default": "null"
+  },
+  {
+    "property": "onRowWillUnmount",
+    "description": "A function that should be called before a row was unmounted. The 'gridRow' will be passed in as argument.",
     "type": "function",
     "default": "null"
   }

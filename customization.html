@@ -29,8 +29,8 @@
 
 	<!-- Scripts
 	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react-dom.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.0/react.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.0/react-dom.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.2/JSXTransformer.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
 	<script src="scripts/Griddle.js"></script>
@@ -98,6 +98,22 @@
 </dl>
 
 <dl>
+  <dt>customCompareFn</dt>
+  <dd><strong>function</strong></dd>
+  <dd><strong>with 1 argument</strong> specifies a function that defines the sort order of the column data. Passed to <a href="https://lodash.com/docs#sortBy">_.sortBy</a> method, invoked with 1 argument.</dd>
+  <dd><strong>with 2 arguments</strong> specifies a function that defines the sort order of the column data. Passed to standard JS <a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/sort">sort</a> method, invoked ith 2 arguments. Useful, for example, wih naturalSort(a, b) from <a href="https://www.npmjs.com/package/javascript-natural-sort">javascript-natural-sort</a></dd>
+</dl>
+
+<dl>
+  <dt>multiSort</dt>
+  <dd><strong>object</strong> - allows to specify multiple sorting when sorting current column. Specified columns will be sorted after current</dd>
+  <code>multiSort: {
+      columns: [&#39;name&#39;],
+      orders: [&#39;asc&#39;]
+    }</code>
+</dl>
+
+<dl>
   <dt>order</dt>
   <dd><strong>int</strong> - The order that this column should appear in Griddle.</dd>
 </dl>
@@ -110,6 +126,11 @@
 <dl>
   <dt>cssClassName</dt>
   <dd><strong>string</strong> - The css class name to apply to this column.</dd>
+</dl>
+
+<dl>
+    <dt>titleStyles</dt>
+    <dd><strong>object</strong> - collection of styles applied to column header</dd>
 </dl>
 
 <dl>
@@ -418,6 +439,96 @@ ReactDOM.render(
 
 <hr />
 
+<h3 id="custom-sorting">Custom sorting</h3>
+<h5 id="example-">Example:</h5>
+<p>In this example we are going to sort <code>Employee Name</code> column by last name, followed by first name:</p>
+<pre><code>var exampleMetadata = [
+  {
+  <span class="string">"columnName"</span>: <span class="string">"id"</span>,
+  <span class="string">"order"</span>: <span class="number">1</span>,
+  <span class="string">"locked"</span>: false,
+  <span class="string">"visible"</span>: false,
+  <span class="string">"displayName"</span>: <span class="string">"ID"</span>
+  },
+  {
+  <span class="string">"columnName"</span>: <span class="string">"name"</span>,
+  <span class="string">"order"</span>: <span class="number">9</span>,
+  <span class="string">"locked"</span>: false,
+  <span class="string">"visible"</span>: true,
+  <span class="string">"displayName"</span>: <span class="string">"Employee Name"</span>,
+  <span class="string">"compare"</span>: <span class="keyword">function</span>(name) {
+      var a = name.split(<span class="string">" "</span>);
+      <span class="keyword">return</span> a[<span class="number">1</span>] + <span class="string">" "</span> + a[<span class="number">0</span>];
+    }
+  },
+  <span class="keyword">...</span>
+]</code></pre>
+<p>Then, like in first example, but specify initialSort column:</p>
+<pre><code>React.render(
+  <span class="xml"><span class="tag">&lt;<span class="title">Griddle</span> <span class="attribute">results</span>=<span class="value">{fakeData}</span> <span class="attribute">columnMetadata</span>=<span class="value">{exampleMetadata}</span> <span class="attribute">showFilter</span>=<span class="value">{true}</span>
+    <span class="attribute">showSettings</span>=<span class="value">{true}</span> <span class="attribute">columns</span>=<span class="value">{["name",</span> "<span class="attribute">city</span>", "<span class="attribute">state</span>", "<span class="attribute">country</span>"]} <span class="attribute">initialSort</span>=<span class="value">"name"</span>/&gt;</span>,
+    document.getElementById('griddle-metadata')</span></code></pre>
+<div id="griddle-sorting"></div>
+
+<script type="text/jsx">
+  var exampleMetadata = [
+  {
+    "columnName": "id",
+    "order": 1,
+    "locked": false,
+    "visible": false,
+    "displayName": "ID"
+  },
+  {
+    "columnName": "name",
+    "order": 9,
+    "locked": false,
+    "visible": true,
+    "displayName": "Employee Name",
+    "compare": function(name) {
+        var a = name.split(" ");
+        return a[1] + " " + a[0];
+    }
+  },
+  {
+    "columnName": "city",
+    "order": 8,
+    "locked": false,
+  },
+  {
+    "columnName": "state",
+    "order": 7,
+    "locked": false,
+    "visible": true
+  },
+  {
+    "columnName": "country",
+    "order": 6,
+    "locked": false,
+    "visible": true
+  },
+  {
+    "columnName": "company",
+    "order": 5,
+    "locked": false,
+    "visible": true
+  },
+  {
+    "columnName": "favoriteNumber",
+    "order":  4,
+    "locked": false,
+    "visible": true,
+    "displayName": "Favorite Number"
+  }
+];
+
+    ReactDOM.render(
+        <Griddle results={fakeData} columnMetadata={exampleMetadata} tableClassName="table" showFilter={true} showSettings={true} columns={["name", "city", "state", "country"]} initialSort="name"/>, document.getElementById('griddle-sorting')
+    );
+</script>
+
+<hr />
+
 <h3 id="row-metadata">Row Metadata</h3>
 <dl>
   <dt>bodyCssClassName</dt>
@@ -601,8 +712,7 @@ ReactDOM.render(<Griddle enableToggleCustom={true} showSettings={true} results={
 <p>Griddle supports custom filtering and custom filter components. In order to use a custom filter function set the property <code>useCustomFilterer</code> to true and pass in a function to the  <code>customFilterer</code> property. To use a custom filter component set <code>useCustomFilterComponent</code> to true and pass a component to <code>customFilterComponent</code>.</p>
 <h5 id="example-">Example:</h5>
 <p>This example shows how to make a custom filter component with a custom filter function that does a case-insensitive search through the items. The component must call <code>this.props.changeFilter(val)</code> when the filter should be updated. In the example below we pass a string but any variable type can be used as long as the filter function is expecting it, for example an advanced query could be passed in using an object. The filter function signature takes the items to be filtered and the query to filter them by.</p>
-<pre><code class="lang-javascript">  <span class="keyword">var</span> _ = require(<span class="string">'underscore'</span>),
-      squish = require(<span class="string">'object-squish'</span>);
+<pre><code class="lang-javascript">      squish = require(<span class="string">'object-squish'</span>);
 
   <span class="keyword">var</span> customFilterFunction = <span class="keyword">function</span>(items, query) {
     <span class="keyword">return</span> _.filter(items, (item) =&gt; {
@@ -656,6 +766,11 @@ ReactDOM.render(<Griddle enableToggleCustom={true} showSettings={true} results={
 <dl>
   <dt>customPagerComponent</dt>
   <dd><strong>object</strong> - The custom pagination component. default: {}</dd>
+</dl>
+
+<dl>
+  <dt>customPagerComponentOptions</dt>
+  <dd><strong>object</strong> - Any options to be passed to the custom pagination component. default: {}</dd>
 </dl>
 
 <h5 id="example">Example</h5>
